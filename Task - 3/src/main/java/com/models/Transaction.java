@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.models;
 
 public class Transaction {
 	private int crid;

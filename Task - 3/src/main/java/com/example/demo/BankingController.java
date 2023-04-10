@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.models.Transaction;
+import com.models.TransactionalService;
+import com.models.User;
+import com.models.UserService;
+
 @Controller
 @RequestMapping("/api")
 public class BankingController {
@@ -54,10 +59,15 @@ public class BankingController {
 	public ModelAndView checkBalance(User user, ModelAndView mandv) {
 		if (user.getId() > 0) {
 			user = userService.findUserById(user.getId());
-			mandv.addObject("id", user.getId());
-			mandv.addObject("name", user.getName());
-			mandv.addObject("amount", user.getAmount());
-			mandv.setViewName("userdata");
+			if (user == null) {
+				mandv.addObject("msg", "Invalid User Id");
+				mandv.setViewName("successpage");
+			} else {
+				mandv.addObject("id", user.getId());
+				mandv.addObject("name", user.getName());
+				mandv.addObject("amount", user.getAmount());
+				mandv.setViewName("userdata");
+			}
 		} else {
 			mandv.addObject("msg", "Invalid User Id");
 			mandv.setViewName("successpage");
@@ -78,8 +88,8 @@ public class BankingController {
 		try {
 			transactService.moneyTransfer(transaction.getCrid(), transaction.getDrid(), transaction.getAmount());
 			mandv.addObject("msg", "Amount Transferred Successfully");
-		} catch (TransactionalException e) {
-			mandv.addObject("msg", "Transaction Failed");
+		} catch (Exception e) {
+			mandv.addObject("msg", e.getMessage());
 		}
 		mandv.setViewName("successpage");
 		return mandv;
