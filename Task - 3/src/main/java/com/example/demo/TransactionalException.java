@@ -1,3 +1,4 @@
+// Transactional Exception
 package com.example.demo;
 
 public class TransactionalException extends Exception{

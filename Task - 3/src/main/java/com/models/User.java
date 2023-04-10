@@ -1,3 +1,4 @@
+// User Model
 package com.models;
 
 import javax.persistence.Entity;

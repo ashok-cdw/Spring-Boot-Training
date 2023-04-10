@@ -1,3 +1,4 @@
+// Banking Service
 package com.models;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class BankingService {
 		this.userdao = userdao;
 	}
 
+	// Do Credit Method	
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void doCredit(int crid, double amount) throws Exception {
 		User user = userdao.findById(crid).orElse(null);
@@ -33,6 +35,7 @@ public class BankingService {
 		userdao.save(user);
 	}
 
+	// Do Debit Method	
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void doDebit(int drid, double amount) throws Exception {
 		User user = userdao.findById(drid).orElse(null);

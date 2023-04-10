@@ -1,3 +1,4 @@
+// Banking Controller
 package com.example.demo;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import com.models.User;
 import com.models.UserService;
 
 @Controller
+// Parent Route
 @RequestMapping("/api")
 public class BankingController {
 
@@ -26,11 +28,13 @@ public class BankingController {
 	@Autowired
 	private TransactionalService transactService;
 
+	// Menu Route - Get Method
 	@GetMapping("/menu")
 	public String menuPage() {
 		return "menupage";
 	}
 
+	// Create User Route - Get Method
 	@GetMapping("/createuser")
 	public ModelAndView createUserPage(ModelAndView mandv) {
 		User user = new User();
@@ -39,6 +43,7 @@ public class BankingController {
 		return mandv;
 	}
 
+	// Create User Route - Post Method
 	@PostMapping("/createuser")
 	public ModelAndView submitUserPage(User user, ModelAndView mandv) {
 		userService.createUser(user);
@@ -47,6 +52,7 @@ public class BankingController {
 		return mandv;
 	}
 
+	// Check Balance - Get Method
 	@GetMapping("/checkbalance")
 	public ModelAndView checkBalancePage(ModelAndView mandv) {
 		User user = new User();
@@ -55,6 +61,7 @@ public class BankingController {
 		return mandv;
 	}
 
+	// Check Balance - Post Method
 	@PostMapping("/checkbalance")
 	public ModelAndView checkBalance(User user, ModelAndView mandv) {
 		if (user.getId() > 0) {
@@ -75,6 +82,7 @@ public class BankingController {
 		return mandv;
 	}
 
+	// Money Transfer - Get Method
 	@GetMapping("/moneytransfer")
 	public ModelAndView doBalanceTransferPage(ModelAndView mandv) {
 		Transaction transaction = new Transaction();
@@ -83,6 +91,7 @@ public class BankingController {
 		return mandv;
 	}
 
+	// Money Transfer - Post Method
 	@PostMapping("/moneytransfer")
 	public ModelAndView balanceTransfer(Transaction transaction, ModelAndView mandv) {
 		try {
@@ -95,6 +104,7 @@ public class BankingController {
 		return mandv;
 	}
 
+	// Get Users By Name - Get Method
 	@GetMapping("/users/{name}")
 	public ResponseEntity<List<User>> getUsersByName(@PathVariable String name) {
 		return ResponseEntity.ok(userService.findByName(name));

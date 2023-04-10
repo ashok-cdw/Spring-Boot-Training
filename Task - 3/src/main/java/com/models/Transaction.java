@@ -1,3 +1,4 @@
+// Transactional Model
 package com.models;
 
 public class Transaction {
