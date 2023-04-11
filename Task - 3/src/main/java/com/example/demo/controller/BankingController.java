@@ -1,5 +1,5 @@
 // Banking Controller
-package com.example.demo;
+package com.example.demo.controller;
 
 import java.util.List;
 
@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.demo.services.TransactionalService;
+import com.example.demo.services.UserService;
 import com.models.Transaction;
-import com.models.TransactionalService;
 import com.models.User;
-import com.models.UserService;
 
+/**
+ * @author ashok class contains controllers to handle requests
+ */
 @Controller
 // Parent Route
 @RequestMapping("/api")
@@ -28,13 +31,23 @@ public class BankingController {
 	@Autowired
 	private TransactionalService transactService;
 
-	// Menu Route - Get Method
+	/**
+	 * method handles get request with /menu route
+	 * 
+	 * @return menupage
+	 */
 	@GetMapping("/menu")
 	public String menuPage() {
 		return "menupage";
 	}
 
-	// Create User Route - Get Method
+	/**
+	 * method handles get request with /createuser route and return creates new user
+	 * page
+	 * 
+	 * @param mandv
+	 * @return mandv
+	 */
 	@GetMapping("/createuser")
 	public ModelAndView createUserPage(ModelAndView mandv) {
 		User user = new User();
@@ -43,16 +56,39 @@ public class BankingController {
 		return mandv;
 	}
 
-	// Create User Route - Post Method
+	/**
+	 * method handles post request with /createuser route and creates new user and
+	 * handles exception for null or empty values or existing values
+	 * 
+	 * @param user
+	 * @param mandv
+	 * @return mandv
+	 */
 	@PostMapping("/createuser")
 	public ModelAndView submitUserPage(User user, ModelAndView mandv) {
-		userService.createUser(user);
-		mandv.addObject("msg", "User Created Successfully");
-		mandv.setViewName("successpage");
+		if (user.getId() == 0 || user.getName() == "" || user.getAmount() == 0) {
+			mandv.addObject("msg", "Please Provide All The Fields");
+			mandv.setViewName("successpage");
+		} else {
+			if (userService.findUserById(user.getId()) != null) {
+				mandv.addObject("msg", "User " + user.getId() + " Already Exists");
+				mandv.setViewName("successpage");
+			} else {
+				userService.createUser(user);
+				mandv.addObject("msg", "User " + user.getId() + " Created Successfully");
+				mandv.setViewName("successpage");
+			}
+		}
 		return mandv;
 	}
 
-	// Check Balance - Get Method
+	/**
+	 * method handles get request with /checkbalance route and returns checkbalance
+	 * page
+	 * 
+	 * @param mandv
+	 * @return mandv
+	 */
 	@GetMapping("/checkbalance")
 	public ModelAndView checkBalancePage(ModelAndView mandv) {
 		User user = new User();
@@ -61,28 +97,40 @@ public class BankingController {
 		return mandv;
 	}
 
-	// Check Balance - Post Method
+	/**
+	 * method handles post request with /checkbalance route and returns balance and
+	 * handles exception for null or empty values or not existing values
+	 * 
+	 * @param mandv
+	 * @return mandv
+	 */
 	@PostMapping("/checkbalance")
 	public ModelAndView checkBalance(User user, ModelAndView mandv) {
 		if (user.getId() > 0) {
-			user = userService.findUserById(user.getId());
-			if (user == null) {
-				mandv.addObject("msg", "Invalid User Id");
+			if (userService.findUserById(user.getId()) == null) {
+				mandv.addObject("msg", "Invalid User Id : " + user.getId());
 				mandv.setViewName("successpage");
 			} else {
+				user = userService.findUserById(user.getId());
 				mandv.addObject("id", user.getId());
 				mandv.addObject("name", user.getName());
 				mandv.addObject("amount", user.getAmount());
 				mandv.setViewName("userdata");
 			}
 		} else {
-			mandv.addObject("msg", "Invalid User Id");
+			mandv.addObject("msg", "Invalid User Id : " + user.getId());
 			mandv.setViewName("successpage");
 		}
 		return mandv;
 	}
 
-	// Money Transfer - Get Method
+	/**
+	 * method handles get request with /moneytransfer route and returns
+	 * moneytransfer page
+	 * 
+	 * @param mandv
+	 * @return mandv
+	 */
 	@GetMapping("/moneytransfer")
 	public ModelAndView doBalanceTransferPage(ModelAndView mandv) {
 		Transaction transaction = new Transaction();
@@ -91,7 +139,15 @@ public class BankingController {
 		return mandv;
 	}
 
-	// Money Transfer - Post Method
+	/**
+	 * method handles post request with /moneytransfer route and returns success or
+	 * failure message and handles exception for null or empty values or not
+	 * existing values
+	 * 
+	 * @param transaction
+	 * @param mandv
+	 * @return mandv
+	 */
 	@PostMapping("/moneytransfer")
 	public ModelAndView balanceTransfer(Transaction transaction, ModelAndView mandv) {
 		try {
@@ -104,7 +160,13 @@ public class BankingController {
 		return mandv;
 	}
 
-	// Get Users By Name - Get Method
+	/**
+	 * method handles get request with /users/{name} route and gets name as Path
+	 * Variable
+	 * 
+	 * @param name
+	 * @return ResponseEntity<List<User>>
+	 */
 	@GetMapping("/users/{name}")
 	public ResponseEntity<List<User>> getUsersByName(@PathVariable String name) {
 		return ResponseEntity.ok(userService.findByName(name));
