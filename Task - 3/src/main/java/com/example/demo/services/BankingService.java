@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.exception.InvalidUserIdException;
 import com.example.demo.exception.TransactionalException;
-import com.models.User;
-import com.models.UserDAO;
+import com.example.demo.models.User;
+import com.example.demo.models.UserDAO;
 
 /**
  * @author ashok

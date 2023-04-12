@@ -11,8 +11,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  *
  */
 @SpringBootApplication(scanBasePackages = { "com.models", "com.example.demo" })
-@EnableJpaRepositories(basePackageClasses = com.models.UserDAO.class)
-@EntityScan(basePackageClasses = com.models.User.class)
+@EnableJpaRepositories(basePackageClasses = com.example.demo.models.UserDAO.class)
+@EntityScan(basePackageClasses = com.example.demo.models.User.class)
 public class BankingApplication {
 
 	/**

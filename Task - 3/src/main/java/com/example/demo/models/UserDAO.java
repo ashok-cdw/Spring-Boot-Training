@@ -1,5 +1,5 @@
 // User DAO
-package com.models;
+package com.example.demo.models;
 
 import java.util.List;
 

@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.demo.models.Transaction;
+import com.example.demo.models.User;
 import com.example.demo.services.TransactionalService;
 import com.example.demo.services.UserService;
-import com.models.Transaction;
-import com.models.User;
 
 /**
  * @author ashok class contains controllers to handle requests
@@ -68,6 +68,12 @@ public class BankingController {
 	public ModelAndView submitUserPage(User user, ModelAndView mandv) {
 		if (user.getId() == 0 || user.getName() == "" || user.getAmount() == 0) {
 			mandv.addObject("msg", "Please Provide All The Fields");
+			mandv.setViewName("successpage");
+		}else if (user.getAmount() < 0) {
+			mandv.addObject("msg", "Amount cannot be negative");
+			mandv.setViewName("successpage");
+		}else if (user.getId() < 0) {
+			mandv.addObject("msg", "User Id cannot be negative");
 			mandv.setViewName("successpage");
 		} else {
 			if (userService.findUserById(user.getId()) != null) {

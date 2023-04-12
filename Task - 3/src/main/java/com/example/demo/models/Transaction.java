@@ -1,5 +1,5 @@
 // Transactional Model
-package com.models;
+package com.example.demo.models;
 
 /**
  * @author ashok
